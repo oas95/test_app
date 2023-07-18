@@ -14,17 +14,8 @@ from sklearn.utils.class_weight import compute_class_weight
 import itertools
 import joblib
 
-class LabelEncoderWrapper(BaseEstimator, TransformerMixin):
-    def __init__(self):
-        self.label_encoder = LabelEncoder()
-
-    def fit(self, X, y=None):
-        self.label_encoder.fit(X.squeeze())  # Squeeze the input X to handle a single-column DataFrame
-        return self
-
-    def transform(self, X, y=None):
-        return self.label_encoder.transform(X.squeeze()).reshape(-1, 1)  # Squeeze and reshape the output
-'''from models.train_model import train_model'''
+# Load the pickled model
+encoder = joblib.load("score_label_encoder.pkl")
 
 app = Flask(__name__)
 
