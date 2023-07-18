@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- Style -->
+  <link rel="stylesheet" href="static/css/style.css">
+  <link rel="stylesheet" href="static/css/autocomplete.css">
+  <!-- Main HTML-->
+  <title>BRI v1</title>
+
+</head>
+
+<body>
+  <div class="container">
+    <h1>Bull-Rider Insight</h1>
+    <p>Leveraging a sophisticated machine learning algorithm, this tool can accurately predict rider outcomes. This is achieved by analyzing comprehensive data from all past rides in PBR history, factoring in the specific bulls and riders selected.</p>
+  </div>
+
+  <div class="main-container">
+    <div class="input-container">
+      <hr>
+      <!-- Enter Riders-->
+      <div class="rider-section input-section">
+        <h3>Riders</h3>
+        <div class="rider-input">
+          <label for="rider1">Rider 1:</label>
+          <input type="text" id="rider1" name="rider">
+        </div>
+        <div class="rider-input">
+          <label for="rider2">Rider 2:</label>
+          <input type="text" id="rider2" name="rider">
+        </div>
+        <div class="rider-input">
+          <label for="rider3">Rider 3:</label>
+          <input type="text" id="rider3" name="rider">
+        </div>
+        <div class="rider-input">
+          <label for="rider4">Rider 4:</label>
+          <input type="text" id="rider4" name="rider">
+        </div>
+        <div class="rider-input">
+          <label for="rider5">Rider 5:</label>
+          <input type="text" id="rider5" name="rider">
+        </div>
+        <div class="rider-input">
+          <label for="rider6">Rider 6:</label>
+          <input type="text" id="rider6" name="rider">
+        </div>
+        <div class="rider-input">
+          <label for="rider7">Rider 7:</label>
+          <input type="text" id="rider7" name="rider">
+        </div>
+      </div>
+      
+      <!-- ENTER BULLS -->
+      <div class="bull-section input-section">
+        <h3>Bulls</h3>
+        <div class="bull-input">
+          <label for="bull1">Bull 1:</label>
+          <input type="text" id="bull1" name="bull">
+        </div>
+        <div class="bull-input">
+          <label for="bull2">Bull 2:</label>
+          <input type="text" id="bull2" name="bull">
+        </div>
+        <div class="bull-input">
+          <label for="bull3">Bull 3:</label>
+          <input type="text" id="bull3" name="bull">
+        </div>
+        <div class="bull-input">
+          <label for="bull4">Bull 4:</label>
+          <input type="text" id="bull4" name="bull">
+        </div>
+        <div class="bull-input">
+          <label for="bull5">Bull 5:</label>
+          <input type="text" id="bull5" name="bull">
+        </div>
+      </div>
+      <button id="runModelButton">Run the Model</button>
+      <hr>
+    </div>
+
+    <div class="result-container">
+      <div id="error" class="error-message"></div>
+      <h3>Optimized Line Up</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Rider</th>
+            <th>Bull</th>
+            <th>Ride Probability</th>
+            <th>Predicted Score</th>
+          </tr>
+        </thead>
+        <tbody id="percentBody">
+        </tbody>
+      </table>
+      <!-- New section for rider statistics -->
+      <div id="riderStatistics" style="margin-top: 20px;">
+        <h3>Optimized Line Up (Ride Probability)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Rider</th>
+            <th>Bull</th>
+            <th>Ride Probability</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <!-- Expected Score Line Up-->
+    <div class="percentage-container">
+      <h3>Alternate Line Up</h3>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Rider</th>
+              <th>Bull</th>
+              <th>Ride Probability</th>
+              <th>Predicted Score</th>
+            </tr>
+          </thead>
+          <tbody id="score">
+          </tbody>
+        </table>
+      <!-- Long List Table -->
+      <div id="riderStatistics" style="margin-top: 20px;">
+        <h3>Rider - Bull Comprehensive List</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Rider</th>
+              <th>Bull</th>
+              <th>Ride Probability</th>
+              <th>Predicted Score</th>
+            </tr>
+        </thead>
+        <tbody id="longlist"></tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Scripts -->
+  <!-- Internet Scripts-->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" defer></script>
+  <!-- File Scripts-->
+  <script src="static/tablefunc.js" defer></script>
+  <script src="static/autocomplete.js" defer></script>
+
+</body>
+
+</html>

@@ -1,0 +1,168 @@
+body {
+  background-color: #F5F5F5;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-container, .result-container, .percentage-container, .container {
+  padding: 20px;
+  background-color: #FFFFFF;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+}
+
+.input-container, .result-container, .percentage-container {
+  max-width: 800px;
+  width: 100%;
+}
+
+.container {
+  max-width: 1000px;
+  width: 90%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 20px;
+}
+
+.input-section {
+  width: 100%;
+  margin-bottom: 2%;
+}
+
+.table-section {
+  width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+  .input-section, .table-section {
+    width: 48%;
+  }
+
+  .input-section {
+    margin-bottom: 0;
+  }
+
+  .main-container {
+    flex-direction: row;
+  }
+}
+
+h1, h3 {
+  text-align: center;
+  width: 100%;
+  color: #333333;
+}
+
+p {
+  text-align: center;
+  color: #666666;
+  margin-bottom: 20px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #EEEEEE;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.rider-input, .bull-input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.bull-input label, .rider-input label {
+  margin-right: 10px;
+  color: #333333;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 30px;
+}
+
+th:first-child {
+  border-top-left-radius: 10px;
+}
+
+th:last-child {
+  border-top-right-radius: 10px;
+}
+
+tr:last-child td:first-child {
+  border-bottom-left-radius: 10px;
+}
+
+tr:last-child td:last-child {
+  border-bottom-right-radius: 10px;
+}
+
+th, td {
+  border: 1px solid #DDDDDD;
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #333333;
+  color: #FFFFFF;
+}
+
+tr:nth-child(even) {
+  background-color: #F9F9F9;
+}
+
+tr:nth-child(odd) {
+  background-color: #FFFFFF;
+}
+
+button {
+  display: block;
+  margin: 30px auto;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.error-message {
+  color: #FF0000;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.ui-autocomplete-input {
+  width: 200px;
+}
+
+.ui-autocomplete {
+  position: absolute;
+  max-height: 100px;
+  overflow-y: auto;
+  /* prevent horizontal scrollbar */
+  overflow-x: hidden;
+  /* add padding for vertical scrollbar */
+  padding-right: 5px;
+  z-index: 1000; /* make sure the dropdown appears above other elements */
+}
