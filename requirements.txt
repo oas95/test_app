@@ -17,7 +17,6 @@ scikit-learn==1.2.0
 scipy==1.9.3
 setuptools==68.0.0
 six==1.16.0
-tzdata==2022g
 threadpoolctl==3.2.0
 Werkzeug==2.3.6
 wheel==0.40.0
