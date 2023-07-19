@@ -27,35 +27,26 @@ class LabelEncoderWrapper(BaseEstimator, TransformerMixin):
         return self.label_encoder.transform(X.squeeze()).reshape(-1, 1)  # Squeeze and reshape the output
 
 def run_prediction_script(riders, bulls):
-    df = pd.read_csv('./Resources/finalv1.csv')
+      # Get the directory where the script is located
+    script_dir = os.path.dirname(os.path.realpath(__file__))
 
-    # Filter out the zero scores
-    df_non_zero = df[df['score'] != 0]
+    # Verify if the preprocessor joblib file exists
+    preprocessor_file = os.path.join(script_dir, 'score_preprocessor1.pkl')
+    if os.path.exists(preprocessor_file):
+        print(f"Loading preprocessor from {preprocessor_file}")
+        with open(preprocessor_file, 'rb') as f:
+            preprocessor = dill.load(f)
+    else:
+        raise FileNotFoundError(f"{preprocessor_file} not found")
 
-    # Define the features and the target
-    X = df_non_zero[['rider', 'bull', 'vsleft_perc', 'vsright_perc',
-       'vsavg_bull_power', 'hand', 'high_score', 'time', 'round', 'bull_power_rating', 'bullscore', 'buckoff_perc_vs_rh_riders',
-       'buckoff_perc_vs_lh_riders']]
-    y = df_non_zero['score']
-
-    # Get the unique class labels
-    classes = df_non_zero['score'].unique()
-
-    # Compute class weights
-    class_weights = compute_class_weight('balanced', classes=classes, y=y)
-
-    preprocessor = ColumnTransformer(
-        transformers=[
-            ('cat', OneHotEncoder(handle_unknown='ignore'), ['rider']),
-            ('num', LabelEncoderWrapper(), ['bull'])
-        ])
-
-    # Preprocess the data
-    X_preprocessed = preprocessor.fit_transform(X)
-
-    # Train the XGBoost regressor with class weighting
-    model = XGBRegressor(objective='reg:squarederror', eval_metric='rmse', scale_pos_weight=(1 / class_weights[1]))
-    model.fit(X_preprocessed, y)
+    # Verify if the model joblib file exists
+    model_file = os.path.join(script_dir, 'score_model1.pkl')
+    if os.path.exists(model_file):
+        print(f"Loading model from {model_file}")
+        with open(model_file, 'rb') as f:
+            model = dill.load(f)
+    else:
+        raise FileNotFoundError(f"{model_file} not found")
     
    # Generate unique combinations of riders and bulls
     combinations = list(itertools.product(riders, bulls))
