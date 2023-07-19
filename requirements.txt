@@ -24,4 +24,4 @@ asgiref==3.7.2
 django==4.0        
 django-model-utils==4.3.1
 sqlparse==0.4.4
-
+dill==0.3.6
