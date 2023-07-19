@@ -27,8 +27,7 @@ class LabelEncoderWrapper(BaseEstimator, TransformerMixin):
         return self.label_encoder.transform(X.squeeze()).reshape(-1, 1)  # Squeeze and reshape the output
 
 def run_prediction_script(riders, bulls):
-    
-   df = pd.read_csv('./Resources/finalv1.csv')
+    df = pd.read_csv('./Resources/finalv1.csv')
 
     # Filter out the zero scores
     df_non_zero = df[df['score'] != 0]
