@@ -28,24 +28,35 @@ class LabelEncoderWrapper(BaseEstimator, TransformerMixin):
 
 def run_prediction_script(riders, bulls):
     
-    # Get the directory where the script is located
-    script_dir = os.path.dirname(os.path.realpath(__file__))
+   df = pd.read_csv('./Resources/finalv1.csv')
 
-    # Verify if the preprocessor joblib file exists
-    preprocessor_file = os.path.join(script_dir, 'score_preprocessor.joblib')
-    if os.path.exists(preprocessor_file):
-        print(f"Loading preprocessor from {preprocessor_file}")
-        preprocessor = joblib.load(preprocessor_file)
-    else:
-        raise FileNotFoundError(f"{preprocessor_file} not found")
+    # Filter out the zero scores
+    df_non_zero = df[df['score'] != 0]
 
-    # Verify if the model joblib file exists
-    model_file = os.path.join(script_dir, 'score_model.joblib')
-    if os.path.exists(model_file):
-        print(f"Loading model from {model_file}")
-        model = joblib.load(model_file)
-    else:
-        raise FileNotFoundError(f"{model_file} not found")
+    # Define the features and the target
+    X = df_non_zero[['rider', 'bull', 'vsleft_perc', 'vsright_perc',
+       'vsavg_bull_power', 'hand', 'high_score', 'time', 'round', 'bull_power_rating', 'bullscore', 'buckoff_perc_vs_rh_riders',
+       'buckoff_perc_vs_lh_riders']]
+    y = df_non_zero['score']
+
+    # Get the unique class labels
+    classes = df_non_zero['score'].unique()
+
+    # Compute class weights
+    class_weights = compute_class_weight('balanced', classes=classes, y=y)
+
+    preprocessor = ColumnTransformer(
+        transformers=[
+            ('cat', OneHotEncoder(handle_unknown='ignore'), ['rider']),
+            ('num', LabelEncoderWrapper(), ['bull'])
+        ])
+
+    # Preprocess the data
+    X_preprocessed = preprocessor.fit_transform(X)
+
+    # Train the XGBoost regressor with class weighting
+    model = XGBRegressor(objective='reg:squarederror', eval_metric='rmse', scale_pos_weight=(1 / class_weights[1]))
+    model.fit(X_preprocessed, y)
     
    # Generate unique combinations of riders and bulls
     combinations = list(itertools.product(riders, bulls))
