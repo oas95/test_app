@@ -1,4 +1,3 @@
-import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from sklearn.base import BaseEstimator, TransformerMixin
 

@@ -1,0 +1,14 @@
+runtime: python310  # Python version
+instance_class: F2  # Define the instance class (Optional)
+entrypoint: gunicorn -b :$PORT app:app  # Define the entrypoint for the application
+
+automatic_scaling: 
+  target_cpu_utilization: 0.65  # Scale based on CPU usage (Optional)
+  min_instances: 1  # Minimum number of instances (Optional)
+  max_instances: 5  # Maximum number of instances (Optional)
+  target_throughput_utilization: 0.6  # Scale based on throughput (Optional)
+
+resources:  # Define the resources for the app
+  cpu: 1
+  memory_gb: 1
+  disk_size_gb: 10

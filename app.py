@@ -4,7 +4,7 @@ import pandas as pd
 
 from models.ml_model import run_ml_model
 from models.model_utils import combined_prediction, Line_Up1, Line_Up2
-from label_encoder_wrapper import LabelEncoderWrapper
+from models.label_encoder_wrapper import LabelEncoderWrapper
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.compose import ColumnTransformer
@@ -14,8 +14,6 @@ from sklearn.utils.class_weight import compute_class_weight
 import itertools
 import joblib
 
-# Load the pickled model
-encoder = joblib.load("score_label_encoder.pkl")
 
 app = Flask(__name__)
 

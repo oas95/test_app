@@ -3,34 +3,25 @@ from scipy.optimize import linear_sum_assignment
 import itertools
 import pickle
 import os
-import joblib
+
 
 import pandas as pd
+from .label_encoder_wrapper import LabelEncoderWrapper
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.base import BaseEstimator, TransformerMixin
 from xgboost import XGBRegressor
 from sklearn.utils.class_weight import compute_class_weight
 import itertools
-import joblib
+import dill
 
-
-class LabelEncoderWrapper(BaseEstimator, TransformerMixin):
-    def __init__(self):
-        self.label_encoder = LabelEncoder()
-
-    def fit(self, X, y=None):
-        self.label_encoder.fit(X.squeeze())  # Squeeze the input X to handle a single-column DataFrame
-        return self
-
-    def transform(self, X, y=None):
-        return self.label_encoder.transform(X.squeeze()).reshape(-1, 1)  # Squeeze and reshape the output
 
 def run_prediction_script(riders, bulls):
-      # Get the directory where the script is located
+    
+   # Get the directory where the script is located
     script_dir = os.path.dirname(os.path.realpath(__file__))
 
-    # Verify if the preprocessor joblib file exists
+# Verify if the preprocessor joblib file exists
     preprocessor_file = os.path.join(script_dir, 'score_preprocessor1.pkl')
     if os.path.exists(preprocessor_file):
         print(f"Loading preprocessor from {preprocessor_file}")
@@ -47,6 +38,7 @@ def run_prediction_script(riders, bulls):
             model = dill.load(f)
     else:
         raise FileNotFoundError(f"{model_file} not found")
+
     
    # Generate unique combinations of riders and bulls
     combinations = list(itertools.product(riders, bulls))
