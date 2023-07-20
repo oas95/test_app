@@ -3,6 +3,7 @@ from scipy.optimize import linear_sum_assignment
 import itertools
 import pickle
 import os
+import numpy as np
 
 
 import pandas as pd
@@ -17,7 +18,8 @@ import dill
 
 
 def run_prediction_script(riders, bulls):
-    
+    riders.sort()
+    bulls.sort()
    # Get the directory where the script is located
     script_dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -68,7 +70,8 @@ def run_prediction_script(riders, bulls):
 # Model Long List
 
 def run_ml_pivot(riders, bulls):
-    
+    riders.sort()
+    bulls.sort()
     # Load the trained models
     with open('./models/encoder.pkl', 'rb') as f:
         encoder = pickle.load(f)
@@ -112,6 +115,8 @@ def run_ml_pivot(riders, bulls):
     return df_reordered
 
 def combined_prediction(riders, bulls):
+    riders.sort()
+    bulls.sort()
     # Run the prediction script and the ml pivot script
     result_df = run_prediction_script(riders, bulls)
     print("Results from run_prediction_script:\n", result_df.head())  # print first few rows of result_df
@@ -132,7 +137,11 @@ def combined_prediction(riders, bulls):
     return merged_df
 
 
+
 def Line_Up1(riders, bulls):
+    np.random.seed(0)
+    riders.sort()
+    bulls.sort()
     # Run the prediction script and the ml pivot script
     result_df = run_prediction_script(riders, bulls)
     print("Results from run_prediction_script:\n", result_df.head())  # print first few rows of result_df
@@ -155,17 +164,20 @@ def Line_Up1(riders, bulls):
     merged_df['Predicted Score'] = pd.to_numeric(merged_df['Predicted Score'], errors='coerce')
     merged_df['Successful_Probability'] = pd.to_numeric(merged_df['Successful_Probability'], errors='coerce')
 
-    # Create a new column 'Combined Score' that is the sum of 'Ride Probability' and 'Predicted Score'
     # Create a new column 'Combined Score' that is the weighted sum of 'Successful_Probability' and 'Predicted Score'
-    merged_df['Combined Score'] = (0.75 * merged_df['Successful_Probability']) + (0.25 * merged_df['Predicted Score'])
+    merged_df['Combined Score'] = (0.70 * merged_df['Successful_Probability']) + (0.30 * merged_df['Predicted Score'])
 
     print(merged_df)
     
     # Pivot the DataFrame to create a cost matrix
-    cost_matrix = merged_df.pivot(index='Rider', columns='Bull', values='Combined Score').fillna(0).to_numpy()
+    cost_matrix = merged_df.pivot(index='Rider', columns='Bull', values='Combined Score')
+    cost_matrix = cost_matrix.fillna(cost_matrix.min().min() - 1)  # Fill NA values
+
+    # Invert the scores as the Hungarian Algorithm works on the principle of minimizing the cost.
+    cost_matrix = cost_matrix.max().max() - cost_matrix
 
     # Apply the Hungarian algorithm
-    row_ind, col_ind = linear_sum_assignment(-cost_matrix)
+    row_ind, col_ind = linear_sum_assignment(cost_matrix)
 
     # Get the bull names
     bulls = merged_df['Bull'].unique()
@@ -190,9 +202,10 @@ def Line_Up1(riders, bulls):
     return optimal_df
 
 
-
-
 def Line_Up2(riders, bulls):
+    np.random.seed(0)
+    riders.sort()
+    bulls.sort()
     # Run the prediction script and the ml pivot script
     result_df = run_prediction_script(riders, bulls)
 
@@ -212,23 +225,28 @@ def Line_Up2(riders, bulls):
     merged_df['Successful_Probability'] = pd.to_numeric(merged_df['Successful_Probability'], errors='coerce')
 
     # Create a new column 'Combined Score' that is the weighted sum of 'Successful_Probability' and 'Predicted Score'
-    merged_df['Combined Score'] = (0.75 * merged_df['Successful_Probability']) + (0.25 * merged_df['Predicted Score'])
+    merged_df['Combined Score'] = (0.70 * merged_df['Successful_Probability']) + (0.30 * merged_df['Predicted Score'])
 
     # Pivot the DataFrame to create a cost matrix
-    cost_matrix = merged_df.pivot(index='Rider', columns='Bull', values='Combined Score').fillna(0).to_numpy()
+    cost_matrix = merged_df.pivot(index='Rider', columns='Bull', values='Combined Score')
+    cost_matrix = cost_matrix.fillna(cost_matrix.min().min() - 1)  # Fill NA values
+
+    # Invert the scores as the Hungarian Algorithm works on the principle of minimizing the cost.
+    cost_matrix = cost_matrix.max().max() - cost_matrix
+    cost_matrix = cost_matrix.to_numpy()
 
     # Apply the Hungarian algorithm
-    row_ind, col_ind = linear_sum_assignment(-cost_matrix)
+    row_ind, col_ind = linear_sum_assignment(cost_matrix)
 
     # Store the best lineup
     lineup1 = (row_ind, col_ind)
 
     # Create a copy of cost_matrix and remove one of the optimal assignments
     cost_matrix_2 = cost_matrix.copy()
-    cost_matrix_2[row_ind[0], col_ind[0]] = 0
+    cost_matrix_2[row_ind[0], col_ind[0]] = cost_matrix_2.max().max() + 1
 
     # Apply the Hungarian algorithm again
-    row_ind_2, col_ind_2 = linear_sum_assignment(-cost_matrix_2)
+    row_ind_2, col_ind_2 = linear_sum_assignment(cost_matrix_2)
 
     # Store the second best lineup
     lineup2 = (row_ind_2, col_ind_2)
@@ -253,11 +271,12 @@ def Line_Up2(riders, bulls):
     # Reset the index of the result DataFrames
     optimal_df1 = result_df1.reset_index(drop=True)
     optimal_df2 = result_df2.reset_index(drop=True)
-    optimal_df1['Successful_Probability'] = optimal_df1['Successful_Probability'].apply(lambda x: '{:.2%}'.format(x))
+    optimal_df1['Successful_Probability'] = optimal_df1['Successful_Probability'].apply(lambda x: '{:.2%}'.format(x / 100.0))
     optimal_df2['Successful_Probability'] = optimal_df2['Successful_Probability'].apply(lambda x: '{:.2%}'.format(x / 100.0))
-    
+
     print("First best lineup:\n", optimal_df1)
     print("Second best lineup:\n", optimal_df2)
     
     return optimal_df2
+
 
